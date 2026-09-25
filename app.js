@@ -1,7 +1,7 @@
-
 const input = document.getElementById("iptvUrl");
 const btn = document.getElementById("playBtn");
 const video = document.getElementById("player");
+
 const channels = [
   {
     name: "Al Jazeera English",
@@ -14,10 +14,12 @@ const channels = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DW_Logo.svg"
   }
 ];
+
+/* Affiche la liste des chaines */
 function displayChannels() {
   const list = document.getElementById("channelList");
   list.innerHTML = "";
-/* Affiche la liste des chaines*/
+
   channels.forEach(ch => {
     const div = document.createElement("div");
     div.className = "channel-item";
@@ -33,6 +35,8 @@ function displayChannels() {
 }
 
 displayChannels();
+
+/* Fonction qui lit un flux IPTV */
 function playChannel(url) {
   if (Hls.isSupported()) {
     const hls = new Hls();
@@ -43,19 +47,10 @@ function playChannel(url) {
   }
 }
 
-
-/*Lire un URL*/
+/* Lire un URL collé dans le champ */
 btn.addEventListener("click", () => {
   const url = input.value.trim();
   if (!url) return alert("Entre une URL IPTV .m3u8");
   playChannel(url);
 });
 
-  if (Hls.isSupported()) {     /*vérifie si ton navigateur sait lire les flux HLS*/
-    const hls = new Hls();
-    hls.loadSource(url);       /*telecharge la source*/
-    hls.attachMedia(video);    /*relie le flux à la balise <video> dans le HTML.*/
-  } else {
-    video.src = url;
-  }
-});
