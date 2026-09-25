@@ -21,3 +21,26 @@ video {
   margin-top: 20px;
   background: black;
 }
+#channelList {
+  margin-top: 20px;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #222;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.channel-item:hover {
+  background: #333;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
