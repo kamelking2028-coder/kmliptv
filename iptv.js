@@ -1,101 +1,164 @@
-// app.js
 
-// Données de base : bouquets + chaînes + URLs HLS
-const data = {
-  francais: {
-    label: "Français",
-    channels: [
-      { name: "France 24", tag: "News", url: "https://static.france24.com/live/F24_FR_HLS/live_web.m3u8" },
-      { name: "TV5 Monde Info", tag: "News", url: "https://example.com/tv5.m3u8" }
-    ]
-  },
-  arabes: {
-    label: "Arabes",
-    channels: [
-      { name: "Al Jazeera", tag: "News", url: "https://example.com/aljazeera.m3u8" }
-    ]
-  },
-  usa: {
-    label: "USA",
-    channels: [
-      { name: "Red Bull TV", tag: "Sport", url: "https://rbmn-live.akamaized.net/hls/live/590964/RedBullTV/master.m3u8" }
-    ]
-  }
-};
+/* ---------------------------------------------------------
+   KML IPTV — Import M3U + Bouquets + Player HLS.js
+   --------------------------------------------------------- */
 
+// Elements HTML
 const bouquetListEl   = document.getElementById('bouquet-list');
 const channelListEl   = document.getElementById('channel-list');
-const currentBouquetEl = document.getElementById('current-bouquet');
 const currentChannelEl = document.getElementById('current-channel');
 const videoEl         = document.getElementById('video');
 
-let currentBouquetKey = null;
-let hlsInstance       = null;
+let bouquets = {};       // Bouquets générés automatiquement
+let hlsInstance = null;  // Player HLS.js
+let currentBouquet = null;
 
-// Initialisation : afficher les bouquets
+/* ---------------------------------------------------------
+   1. Importer un fichier M3U (URL)
+   --------------------------------------------------------- */
+async function importM3UfromURL(url) {
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    parseM3U(text);
+  } catch (err) {
+    alert("Impossible de charger le fichier M3U.");
+  }
+}
+
+/* ---------------------------------------------------------
+   2. Importer un fichier M3U (fichier local)
+   --------------------------------------------------------- */
+function importM3UfromFile(file) {
+  const reader = new FileReader();
+  reader.onload = () => parseM3U(reader.result);
+  reader.readAsText(file);
+}
+
+/* ---------------------------------------------------------
+   3. Parser le M3U
+   --------------------------------------------------------- */
+function parseM3U(text) {
+  const lines = text.split("\n");
+  const channels = [];
+  let current = {};
+
+  lines.forEach(line => {
+
+    // Ligne EXTINF
+    if (line.startsWith("#EXTINF")) {
+
+      const name = line.split(",")[1]?.trim() || "Sans nom";
+
+      const groupMatch = line.match(/group-title="(.*?)"/);
+      const group = groupMatch ? groupMatch[1] : "Autres";
+
+      const logoMatch = line.match(/tvg-logo="(.*?)"/);
+      const logo = logoMatch ? logoMatch[1] : "";
+
+      current = { name, group, logo };
+    }
+
+    // Ligne URL
+    else if (line.startsWith("http")) {
+      current.url = line.trim();
+      channels.push(current);
+    }
+
+  });
+
+  generateBouquets(channels);
+}
+
+/* ---------------------------------------------------------
+   4. Générer les bouquets automatiquement
+   --------------------------------------------------------- */
+function generateBouquets(channels) {
+  bouquets = {};
+
+  channels.forEach(ch => {
+    if (!bouquets[ch.group]) bouquets[ch.group] = [];
+    bouquets[ch.group].push(ch);
+  });
+
+  renderBouquets();
+}
+
+/* ---------------------------------------------------------
+   5. Afficher les bouquets
+   --------------------------------------------------------- */
 function renderBouquets() {
-  bouquetListEl.innerHTML = '';
-  Object.keys(data).forEach(key => {
-    const li = document.createElement('li');
-    li.textContent = data[key].label;
-    li.dataset.key = key;
-    li.addEventListener('click', () => selectBouquet(key));
+  bouquetListEl.innerHTML = "";
+
+  Object.keys(bouquets).forEach(group => {
+    const li = document.createElement("li");
+    li.textContent = group;
+    li.dataset.group = group;
+
+    li.addEventListener("click", () => selectBouquet(group));
+
     bouquetListEl.appendChild(li);
   });
 }
 
-// Sélection d’un bouquet
-function selectBouquet(key) {
-  currentBouquetKey = key;
-  currentBouquetEl.textContent = data[key].label;
+/* ---------------------------------------------------------
+   6. Sélection d’un bouquet
+   --------------------------------------------------------- */
+function selectBouquet(group) {
+  currentBouquet = group;
 
-  // Active visuelle
-  document.querySelectorAll('#bouquet-list li').forEach(li => {
-    li.classList.toggle('active', li.dataset.key === key);
+  document.querySelectorAll("#bouquet-list li").forEach(li => {
+    li.classList.toggle("active", li.dataset.group === group);
   });
 
-  renderChannels(data[key].channels);
+  renderChannels(bouquets[group]);
 }
 
-// Afficher les chaînes du bouquet
+/* ---------------------------------------------------------
+   7. Afficher les chaînes
+   --------------------------------------------------------- */
 function renderChannels(channels) {
-  channelListEl.innerHTML = '';
+  channelListEl.innerHTML = "";
+
   channels.forEach((ch, index) => {
-    const li = document.createElement('li');
+    const li = document.createElement("li");
     li.dataset.index = index;
 
-    const nameSpan = document.createElement('span');
-    nameSpan.className = 'channel-name';
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "channel-name";
     nameSpan.textContent = ch.name;
 
-    const tagSpan = document.createElement('span');
-    tagSpan.className = 'channel-tag';
-    tagSpan.textContent = ch.tag;
+    const tagSpan = document.createElement("span");
+    tagSpan.className = "channel-tag";
+    tagSpan.textContent = ch.group;
 
     li.appendChild(nameSpan);
     li.appendChild(tagSpan);
 
-    li.addEventListener('click', () => selectChannel(index));
+    li.addEventListener("click", () => selectChannel(index));
+
     channelListEl.appendChild(li);
   });
 }
 
-// Sélection d’une chaîne
+/* ---------------------------------------------------------
+   8. Sélection d’une chaîne
+   --------------------------------------------------------- */
 function selectChannel(index) {
-  if (!currentBouquetKey) return;
-  const channel = data[currentBouquetKey].channels[index];
+  const channel = bouquets[currentBouquet][index];
 
   currentChannelEl.textContent = channel.name;
 
-  // Active visuelle
-  document.querySelectorAll('#channel-list li').forEach(li => {
-    li.classList.toggle('active', parseInt(li.dataset.index, 10) === index);
+  document.querySelectorAll("#channel-list li").forEach(li => {
+    li.classList.toggle("active", parseInt(li.dataset.index) === index);
   });
 
   playStream(channel.url);
 }
 
-// Lecture du flux HLS
+/* ---------------------------------------------------------
+   9. Lecture du flux HLS/m3u8
+   --------------------------------------------------------- */
 function playStream(url) {
   if (hlsInstance) {
     hlsInstance.destroy();
@@ -109,15 +172,16 @@ function playStream(url) {
     hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
       videoEl.play();
     });
-  } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+  } else {
     videoEl.src = url;
     videoEl.play();
-  } else {
-    alert("HLS non supporté sur ce navigateur.");
   }
 }
 
-// Lancer
-renderBouquets();
-// Optionnel : sélectionner un bouquet par défaut
-// selectBouquet('francais');
+/* ---------------------------------------------------------
+   10. Bouton pour lire une URL simple (ton ancien lecteur)
+   --------------------------------------------------------- */
+document.getElementById("playBtn").addEventListener("click", () => {
+  const url = document.getElementById("iptvUrl").value.trim();
+  if (url) playStream(url);
+});
