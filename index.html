@@ -1,54 +1,42 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>KML IPTV</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KML IPTV</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h2>Lecteur IPTV Ultra Simple</h2>
+<div class="app">
 
-  <!-- Lecteur simple URL -->
-  <input id="iptvUrl" type="text" placeholder="Colle une URL .m3u8 ici">
-  <button id="playBtn">Lire</button>
+    <aside class="sidebar">
+        <h2>Bouquets</h2>
+        <ul id="bouquet-list"></ul>
+    </aside>
 
-  <!-- Architecture IPTV moderne -->
-  <div class="main-content">
+    <section class="channels-panel">
+        <h2>Chaînes</h2>
+        <ul id="channel-list"></ul>
+    </section>
 
-    <div class="channels-panel">
-        <!-- Liste des chaînes -->
-    </div>
+    <section class="player-panel">
+        <h2 id="current-channel">
+            Aucune chaîne sélectionnée
+        </h2>
 
-    <div class="player-panel">
-        <!-- Lecteur vidéo -->
-    </div>
-
-</div>
-  <div class="app">
-  <div class="channels">
-</div>
-  <aside class="sidebar">
-    <h3>Bouquets</h3>
-    <ul id="bouquet-list"></ul>
-  </aside>
-
-  <section class="channels">
-    <h3>Chaînes</h3>
-    <ul id="channel-list"></ul>
-  </section>
-  <section class="player">
-    <h3 id="current-channel">Aucune chaîne sélectionnée</h3>
-    <video id="video" controls autoplay></video>
-  </section>
+        <video
+            id="video"
+            controls
+            autoplay
+            playsinline>
+        </video>
+    </section>
 
 </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="iptv.js"></script>
-  <script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="iptv.js"></script>
 
 </body>
 </html>
-
