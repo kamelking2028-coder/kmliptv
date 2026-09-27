@@ -92,8 +92,10 @@ iframe{
     width:50%;
     max-width:50%;
 }
-
-
 body{
-    overflow:hidden;
-}}
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:#0f172a;
+    color:white;
+    overflow-y:auto;
+}
