@@ -7,6 +7,7 @@ const bouquetListEl = document.getElementById("bouquet-list");
 const channelListEl = document.getElementById("channel-list");
 const currentChannelEl = document.getElementById("current-channel");
 const videoEl = document.getElementById("video");
+const playBtn = document.getElementById("playBtn");
 
 let hlsInstance = null;
 
@@ -17,11 +18,14 @@ let hlsInstance = null;
 const data = {
     arabes: {
         label: "Arabes",
+
         channels: [
             {
                 name: "Al Jazeera Arabic",
                 tag: "News",
+
                 logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
+
                 url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
             }
         ]
@@ -33,20 +37,21 @@ const data = {
 --------------------------------------------------------- */
 
 function renderBouquets() {
+    if (!bouquetListEl) return;
 
     bouquetListEl.innerHTML = "";
 
-    Object.keys(data).forEach(key => {
-
+    Object.keys(data).forEach((key) => {
+        const bouquet = data[key];
         const li = document.createElement("li");
 
-        li.textContent = data[key].label;
+        li.textContent = bouquet.label;
+        li.dataset.bouquet = key;
 
         li.addEventListener("click", () => {
-
             document
                 .querySelectorAll("#bouquet-list li")
-                .forEach(item => item.classList.remove("active"));
+                .forEach((item) => item.classList.remove("active"));
 
             li.classList.add("active");
 
@@ -54,172 +59,52 @@ function renderBouquets() {
         });
 
         bouquetListEl.appendChild(li);
-
     });
-
 }
 
 /* ---------------------------------------------------------
-   Sélection bouquet
+   Sélection d'un bouquet
 --------------------------------------------------------- */
 
 function selectBouquet(key) {
-
     const bouquet = data[key];
 
-    if (!bouquet) return;
+    if (!bouquet || !Array.isArray(bouquet.channels)) {
+        console.error("Bouquet introuvable :", key);
+        return;
+    }
 
     renderChannels(bouquet.channels);
-
 }
 
 /* ---------------------------------------------------------
-   Affichage chaînes
+   Affichage des chaînes
 --------------------------------------------------------- */
 
 function renderChannels(channels) {
+    if (!channelListEl) return;
 
     channelListEl.innerHTML = "";
 
-    channels.forEach(channel => {
-
+    channels.forEach((channel) => {
         const li = document.createElement("li");
 
-        li.innerHTML = `
-            <div class="channel-item">
-                ${channel.logo}
-                <span>${channel.name}</span>
-            </div>
-        `;
+        li.classList.add("channel-list-item");
 
-        li.addEventListener("click", () => {
+        const channelItem = document.createElement("div");
+        channelItem.classList.add("channel-item");
 
-            document
-                .querySelectorAll("#channel-list li")
-                .forEach(item => item.classList.remove("active"));
+        const logo = document.createElement("img");
+        logo.classList.add("channel-logo");
+        logo.src = channel.logo;
+        logo.alt = `Logo ${channel.name}`;
+        logo.loading = "lazy";
 
-            li.classList.add("active");
-
-            selectChannel(channel);
-
+        logo.addEventListener("error", () => {
+            logo.style.display = "none";
         });
 
-        channelListEl.appendChild(li);
+        const information = document.createElement("div");
+        information.classList.add("channel-info");
 
-    });
-
-}
-
-/* ---------------------------------------------------------
-   Sélection chaîne
---------------------------------------------------------- */
-
-function selectChannel(channel) {
-
-    currentChannelEl.textContent = channel.name;
-
-    playStream(channel.url);
-
-}
-
-/* ---------------------------------------------------------
-   Lecture HLS
---------------------------------------------------------- */
-
-function playStream(url) {
-
-    if (!url) return;
-
-    if (hlsInstance) {
-
-        hlsInstance.destroy();
-        hlsInstance = null;
-
-    }
-
-    if (Hls.isSupported()) {
-
-        hlsInstance = new Hls();
-
-        hlsInstance.loadSource(url);
-
-        hlsInstance.attachMedia(videoEl);
-
-        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-            videoEl.play().catch(() => {});
-        });
-
-    }
-    else if (
-        videoEl.canPlayType("application/vnd.apple.mpegurl")
-    ) {
-
-        videoEl.src = url;
-
-        videoEl.addEventListener(
-            "loadedmetadata",
-            () => {
-                videoEl.play().catch(() => {});
-            },
-            { once: true }
-        );
-
-    }
-    else {
-
-        alert("HLS non supporté sur ce navigateur.");
-
-    }
-
-}
-
-/* ---------------------------------------------------------
-   Player manuel URL
---------------------------------------------------------- */
-
-const playBtn = document.getElementById("playBtn");
-
-if (playBtn) {
-
-    playBtn.addEventListener("click", () => {
-
-        const input = document.getElementById("iptvUrl");
-
-        if (!input) return;
-
-        const url = input.value.trim();
-
-        if (url) {
-
-            currentChannelEl.textContent = "Chaîne personnalisée";
-
-            playStream(url);
-
-        }
-
-    });
-
-}
-
-/* ---------------------------------------------------------
-   Initialisation
---------------------------------------------------------- */
-
-renderBouquets();
-
-const firstBouquet = Object.keys(data)[0];
-
-if (firstBouquet) {
-
-    selectBouquet(firstBouquet);
-
-    const firstChannel =
-        data[firstBouquet].channels[0];
-
-    if (firstChannel) {
-
-        selectChannel(firstChannel);
-
-    }
-
-}
+        const
