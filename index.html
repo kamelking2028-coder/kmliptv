@@ -21,9 +21,12 @@
     </section>
 
     <section class="player-panel">
-        <h2 id="current-channel">
-            Aucune chaîne sélectionnée
-        </h2>
+
+        <div class="player-header">
+            <h2 id="current-channel">
+                Aucune chaîne sélectionnée
+            </h2>
+        </div>
 
         <video
             id="video"
@@ -31,12 +34,19 @@
             autoplay
             playsinline>
         </video>
+
     </section>
 
 </div>
 
+<!-- HLS.js -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<!-- IPTV -->
 <script src="iptv.js"></script>
+
+<!-- Lecture URL manuelle -->
+<script src="app.js"></script>
 
 </body>
 </html>
