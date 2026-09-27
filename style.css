@@ -87,3 +87,13 @@ iframe, video{
     height:80px;
     object-fit:contain;
 }
+video,
+iframe{
+    width:100%;
+    max-width:100%;
+}
+*{
+    box-sizing:border-box;
+body{
+    overflow:hidden;
+}}
