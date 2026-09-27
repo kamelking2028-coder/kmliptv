@@ -112,6 +112,22 @@ body{
     color:white;
     overflow-y:auto;
 }
+.channel-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.channel-logo{
+    width:40px;
+    height:40px;
+    object-fit:contain;
+    flex-shrink:0;
+    background:white;
+    border-radius:6px;
+    padding:2px;
+}
+
 @media (max-width: 768px) {
     .main-content{
         flex-direction:column;
