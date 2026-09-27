@@ -24,9 +24,9 @@ const data = {
                 name: "Al Jazeera Arabic",
                 tag: "News",
 
-                img.src = "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
 
-                url.src = "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
+                url  :"https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
             }
         ]
     }
