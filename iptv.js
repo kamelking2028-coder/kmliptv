@@ -1,104 +1,225 @@
-
 /* ---------------------------------------------------------
-   KML IPTV — Import M3U + Bouquets + Player HLS.js
-   --------------------------------------------------------- */
+   KML IPTV
+   Bouquets + Chaînes + Lecteur HLS
+--------------------------------------------------------- */
 
-
-/* TEST IPTV COMPLET */
-
-const bouquetListEl   = document.getElementById('bouquet-list');
-const channelListEl   = document.getElementById('channel-list');
-const currentChannelEl = document.getElementById('current-channel');
-const videoEl         = document.getElementById('video');
+const bouquetListEl = document.getElementById("bouquet-list");
+const channelListEl = document.getElementById("channel-list");
+const currentChannelEl = document.getElementById("current-channel");
+const videoEl = document.getElementById("video");
 
 let hlsInstance = null;
 
-/* --- Données de test --- */
+/* ---------------------------------------------------------
+   Données IPTV
+--------------------------------------------------------- */
+
 const data = {
-  arabes: {
-    label: "Arabes",
-    channels: [
-      {
-        name: "Al Jazeera Arabic",
-        tag: "News",
-        logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
-        url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
-      }
-    ]
-  }
+    arabes: {
+        label: "Arabes",
+        channels: [
+            {
+                name: "Al Jazeera Arabic",
+                tag: "News",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
+                url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
+            }
+        ]
+    }
 };
 
-/* --- Afficher les bouquets --- */
+/* ---------------------------------------------------------
+   Affichage des bouquets
+--------------------------------------------------------- */
+
 function renderBouquets() {
-  bouquetListEl.innerHTML = "";
 
-  Object.keys(data).forEach(key => {
-    const li = document.createElement("li");
-    li.textContent = data[key].label;
-    li.dataset.key = key;
+    bouquetListEl.innerHTML = "";
 
-    li.addEventListener("click", () => selectBouquet(key));
+    Object.keys(data).forEach(key => {
 
-    bouquetListEl.appendChild(li);
-  });
+        const li = document.createElement("li");
+
+        li.textContent = data[key].label;
+
+        li.addEventListener("click", () => {
+
+            document
+                .querySelectorAll("#bouquet-list li")
+                .forEach(item => item.classList.remove("active"));
+
+            li.classList.add("active");
+
+            selectBouquet(key);
+        });
+
+        bouquetListEl.appendChild(li);
+
+    });
+
 }
-
-/* --- Sélection d’un bouquet --- */
-function selectBouquet(key) {
-  const channels = data[key].channels;
-  renderChannels(channels);
-}
-
-/* --- Afficher les chaînes --- */
-function renderChannels(channels) {
-  channelListEl.innerHTML = "";
-
-  channels.forEach((ch, index) => {
-    const li = document.createElement("li");
-    li.dataset.index = index;
-
-    li.innerHTML = `
-      <img src="${ch.logo}" class="channel-logo">
-      <span>${ch.name}</span>
-    `;
-
-    li.addEventListener("click", () => selectChannel(ch));
-
-    channelListEl.appendChild(li);
-  });
-}
-
-/* --- Sélection d’une chaîne --- */
-function selectChannel(channel) {
-  currentChannelEl.textContent = channel.name;
-  playStream(channel.url);
-}
-
-/* --- Lecture du flux --- */
-function playStream(url) {
-  if (hlsInstance) {
-    hlsInstance.destroy();
-    hlsInstance = null;
-  }
-
-  if (Hls.isSupported()) {
-    hlsInstance = new Hls();
-    hlsInstance.loadSource(url);
-    hlsInstance.attachMedia(videoEl);
-  } else {
-    videoEl.src = url;
-  }
-}
-
-/* --- Lancer le test --- */
-renderBouquets();
-
-
 
 /* ---------------------------------------------------------
-   10. Bouton pour lire une URL simple (ton ancien lecteur)
-   --------------------------------------------------------- */
-document.getElementById("playBtn").addEventListener("click", () => {
-  const url = document.getElementById("iptvUrl").value.trim();
-  if (url) playStream(url);
-});
+   Sélection bouquet
+--------------------------------------------------------- */
+
+function selectBouquet(key) {
+
+    const bouquet = data[key];
+
+    if (!bouquet) return;
+
+    renderChannels(bouquet.channels);
+
+}
+
+/* ---------------------------------------------------------
+   Affichage chaînes
+--------------------------------------------------------- */
+
+function renderChannels(channels) {
+
+    channelListEl.innerHTML = "";
+
+    channels.forEach(channel => {
+
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+            <div class="channel-item">
+                ${channel.logo}
+                <span>${channel.name}</span>
+            </div>
+        `;
+
+        li.addEventListener("click", () => {
+
+            document
+                .querySelectorAll("#channel-list li")
+                .forEach(item => item.classList.remove("active"));
+
+            li.classList.add("active");
+
+            selectChannel(channel);
+
+        });
+
+        channelListEl.appendChild(li);
+
+    });
+
+}
+
+/* ---------------------------------------------------------
+   Sélection chaîne
+--------------------------------------------------------- */
+
+function selectChannel(channel) {
+
+    currentChannelEl.textContent = channel.name;
+
+    playStream(channel.url);
+
+}
+
+/* ---------------------------------------------------------
+   Lecture HLS
+--------------------------------------------------------- */
+
+function playStream(url) {
+
+    if (!url) return;
+
+    if (hlsInstance) {
+
+        hlsInstance.destroy();
+        hlsInstance = null;
+
+    }
+
+    if (Hls.isSupported()) {
+
+        hlsInstance = new Hls();
+
+        hlsInstance.loadSource(url);
+
+        hlsInstance.attachMedia(videoEl);
+
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+            videoEl.play().catch(() => {});
+        });
+
+    }
+    else if (
+        videoEl.canPlayType("application/vnd.apple.mpegurl")
+    ) {
+
+        videoEl.src = url;
+
+        videoEl.addEventListener(
+            "loadedmetadata",
+            () => {
+                videoEl.play().catch(() => {});
+            },
+            { once: true }
+        );
+
+    }
+    else {
+
+        alert("HLS non supporté sur ce navigateur.");
+
+    }
+
+}
+
+/* ---------------------------------------------------------
+   Player manuel URL
+--------------------------------------------------------- */
+
+const playBtn = document.getElementById("playBtn");
+
+if (playBtn) {
+
+    playBtn.addEventListener("click", () => {
+
+        const input = document.getElementById("iptvUrl");
+
+        if (!input) return;
+
+        const url = input.value.trim();
+
+        if (url) {
+
+            currentChannelEl.textContent = "Chaîne personnalisée";
+
+            playStream(url);
+
+        }
+
+    });
+
+}
+
+/* ---------------------------------------------------------
+   Initialisation
+--------------------------------------------------------- */
+
+renderBouquets();
+
+const firstBouquet = Object.keys(data)[0];
+
+if (firstBouquet) {
+
+    selectBouquet(firstBouquet);
+
+    const firstChannel =
+        data[firstBouquet].channels[0];
+
+    if (firstChannel) {
+
+        selectChannel(firstChannel);
+
+    }
+
+}
