@@ -13,7 +13,20 @@ header{
     font-weight:bold;
     border-bottom:1px solid #334155;
 }
+.main-content{
+    display:flex;
+    gap:15px;
+    align-items:flex-start;
+}
 
+.channels-panel{
+    width:250px;
+    flex-shrink:0;
+}
+
+.player-panel{
+    flex:1;
+}
 .container{
     display:flex;
     height:calc(100vh - 70px);
