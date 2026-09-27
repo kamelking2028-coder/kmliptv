@@ -89,9 +89,11 @@ iframe, video{
 }
 video,
 iframe{
-    width:100%;
-    max-width:100%;
+    width:50%;
+    max-width:50%;
 }
+
+
 *{
     box-sizing:border-box;
 body{
