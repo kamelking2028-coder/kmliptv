@@ -127,7 +127,35 @@ body{
     border-radius:6px;
     padding:2px;
 }
+.channel-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
+.channel-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    flex-shrink: 0;
+    padding: 4px;
+    border-radius: 8px;
+    background: white;
+}
+
+.channel-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.channel-name {
+    font-weight: 600;
+}
+
+.channel-tag {
+    color: #aab4c5;
+}
 @media (max-width: 768px) {
     .main-content{
         flex-direction:column;
