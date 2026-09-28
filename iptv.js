@@ -14,34 +14,30 @@ let hlsInstance = null;
 /* ---------------------------------------------------------
    Données IPTV
 --------------------------------------------------------- */
-
-const data = {
-    arabes: {
-        label: "Arabes",
-
-        channels: [
-            {
-                name: "Al Jazeera Arabic",
-                tag: "News",
-
-                logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
-
-                url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
-            }
-        ]
-    }
-   {
-  name: "Français",
-  channels: [
-       {
+const bouquets = [
+{
+    name: "Arabes",
+    channels: [
+        {
+            name: "Al Jazeera Arabic",
+            tag: "News",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
+            url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
+        }
+    ]
+},
+{
+    name: "Français",
+    channels: [
+        {
             name: "France 24 Français",
             tag: "News",
             logo: "https://upload.wikimedia.org/wikipedia/commons/8/8a/France24.png",
             url: "https://live.france24.com/hls/live/2037218/F24_FR_HI_HLS/master_5000.m3u8"
-       }
+        }
     ]
- }
-};
+}
+];
 
 /* ---------------------------------------------------------
    Affichage des bouquets
