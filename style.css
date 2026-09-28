@@ -18,10 +18,7 @@ header{
     width:250px;
     flex-shrink:0;
 }
-.current-channel{
-    position:300px;
-    
-}    
+   
 .player-panel{
     flex:1;
 }
@@ -98,10 +95,11 @@ iframe, video{
     height:80px;
     object-fit:contain;
 }
-video,
-iframe{
-    width:50%;
-    max-width:50%;
+#video{
+    width:100%;
+    height:70vh;
+    border:none;
+    background:#000;
 }
 body{
     margin:0;
