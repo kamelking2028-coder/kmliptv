@@ -13,11 +13,6 @@ header{
     font-weight:bold;
     border-bottom:1px solid #334155;
 }
-.main-content{
-    display:flex;
-    gap:15px;
-    align-items:flex-start;
-}
 
 .channels-panel{
     width:250px;
@@ -159,6 +154,28 @@ body{
 .channel-tag {
     color: #aab4c5;
 }
+.app{
+    display:flex;
+    height:100vh;
+}
+
+.sidebar{
+    width:280px;
+    flex-shrink:0;
+}
+
+.channels-panel{
+    width:300px;
+    flex-shrink:0;
+    padding:15px;
+    overflow-y:auto;
+}
+
+.player-panel{
+    flex:1;
+    padding:15px;
+}
+
 @media (max-width: 768px) {
     .main-content{
         flex-direction:column;
