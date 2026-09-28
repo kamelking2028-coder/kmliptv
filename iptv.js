@@ -30,6 +30,17 @@ const data = {
             }
         ]
     }
+   {
+  name: "Français",
+  channels: [
+       {
+            name: "France 24 Français",
+            tag: "News",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/8/8a/France24.png",
+            url: "https://live.france24.com/hls/live/2037218/F24_FR_HI_HLS/master_5000.m3u8"
+       }
+    ]
+ }
 };
 
 /* ---------------------------------------------------------
