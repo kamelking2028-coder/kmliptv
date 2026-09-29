@@ -73,7 +73,7 @@ function renderChannels(channels) {
 
         li.innerHTML = `
             <div class="channel-item">
-                ${channel.logoUrl}
+                <img class="channel-logo" src="${channel.logoUrl}
                 <div class="channel-info">
                     <div class="channel-name">${channel.name}</div>
                     <div class="channel-tag">${channel.tag}</div>
