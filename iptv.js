@@ -8,7 +8,6 @@ const currentChannelEl = document.getElementById("current-channel");
 const videoEl = document.getElementById("video");
 
 let hlsInstance = null;
-
 const bouquets = [
 {
     name: "Arabes",
@@ -16,7 +15,7 @@ const bouquets = [
         {
             name: "Al Jazeera Arabic",
             tag: "News",
-            logoUrl :"https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
+            logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
             url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
         }
     ]
@@ -26,13 +25,14 @@ const bouquets = [
     channels: [
         {
             name: "France 24 Français",
-           tag: "News",
-           logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/France_24_logo.svg/512px-France_24_logo.svg.png",
-            url: "https://live.france24.com/hls/live/2037218/F24_FR_HI_HLS/master_5000.m3u8"
+            tag: "News",
+            logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/France_24_logo.svg/512px-France_24_logo.svg.png",
+            url: "https://static.france24.com/live/F24_FR_LO_HLS/live_web.m3u8"
         }
     ]
 }
 ];
+
 
 function renderBouquets() {
 
