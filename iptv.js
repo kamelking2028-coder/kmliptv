@@ -80,7 +80,7 @@ function renderChannels(channels) {
                 </div>
             </div>
         `;
-
+         ``
         li.addEventListener("click", () => {
 
             document
