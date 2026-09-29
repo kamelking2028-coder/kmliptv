@@ -16,7 +16,7 @@ const bouquets = [
         {
             name: "Al Jazeera Arabic",
             tag: "News",
-           <img id="logo"  src= "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png">,
+            logoUrl :"https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
             url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
         }
     ]
@@ -28,7 +28,6 @@ const bouquets = [
             name: "France 24 Français",
            tag: "News",
            logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/France_24_logo.svg/512px-France_24_logo.svg.png",
-          /*-- "logo": "https://upload.wikimedia.org/wikipedia/commons/8/8a/France24.png",*/ 
             url: "https://live.france24.com/hls/live/2037218/F24_FR_HI_HLS/master_5000.m3u8"
         }
     ]
