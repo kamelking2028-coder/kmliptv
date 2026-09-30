@@ -72,17 +72,15 @@ function renderChannels(channels) {
     channels.forEach(channel => {
 
         const li = document.createElement("li");
-
-        li.innerHTML = `
+            li.innerHTML = `
             <div class="channel-item">
-                <img class="channel-logo" src="${channel.logo}
-                <div class="channel-info">
-                    <div class="channel-name">${channel.name}</div>
-                    <div class="channel-tag">${channel.tag}</div>
-                </div>
-            </div>
-        `;
-         ``
+                <img class="channel-logo"
+                     src="${ch.logo}"
+                     ss="channel-name">${ch.name}</div>
+                <div class="channel-tag">${ch.tag || ""}</div>
+       </div>
+       `;
+   
         li.addEventListener("click", () => {
 
             document
