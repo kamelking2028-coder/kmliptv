@@ -139,5 +139,39 @@ function renderBouquets() {
         }
     });
 }
+let channels = [];
 
+function parseM3U(content) {
+
+    channels = [];
+
+    const lines = content.split("\n");
+
+    for (let i = 0; i < lines.length; i++) {
+
+        if (lines[i].startsWith("#EXTINF")) {
+
+            const info = lines[i];
+            const url = lines[i + 1]?.trim();
+
+            const name = info.split(",").pop();
+
+            const logoMatch = info.match(/tvg-logo="([^"]+)"/);
+
+            const logo = logoMatch ? logoMatch[1] : "";
+
+            channels.push({
+                name,
+                tag: "IPTV",
+                logo,
+                url
+            });
+        }
+    }
+
+    renderChannels(channels);
+}
+reader.onload = (e) => {
+    parseM3U(e.target.result);
+};
 renderBouquets();
