@@ -64,7 +64,6 @@ function renderBouquets() {
         }
     });
 }
-
 function renderChannels(channels) {
 
     channelListEl.innerHTML = "";
@@ -72,15 +71,23 @@ function renderChannels(channels) {
     channels.forEach(channel => {
 
         const li = document.createElement("li");
-            li.innerHTML = `
+
+        li.innerHTML = `
             <div class="channel-item">
-                <img class="channel-logo"
-                     src="${ch.logo}"
-                     ss="channel-name">${ch.name}</div>
-                <div class="channel-tag">${ch.tag || ""}</div>
-       </div>
-       `;
-   
+                ${channel.logo}
+
+                <div class="channel-info">
+                    <div class="channel-name">
+                        ${channel.name}
+                    </div>
+
+                    <div class="channel-tag">
+                        ${channel.tag || ""}
+                    </div>
+                </div>
+            </div>
+        `;
+
         li.addEventListener("click", () => {
 
             document
@@ -90,11 +97,14 @@ function renderChannels(channels) {
             li.classList.add("active");
 
             selectChannel(channel);
+
         });
 
         channelListEl.appendChild(li);
+
     });
 }
+
 
 function selectChannel(channel) {
 
