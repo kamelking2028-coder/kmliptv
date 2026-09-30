@@ -15,7 +15,8 @@ const bouquets = [
         {
             name: "Al Jazeera Arabic",
             tag: "News",
-            logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",
+            logo: "logos/AL Jazeera.png",
+            /*logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",*/
             url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
         }
     ]
