@@ -1,3 +1,36 @@
+.top-bar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    background:#1b1b1b;
+    border-bottom:1px solid #333;
+}
+
+.top-bar button{
+    background:#2a2a2a;
+    color:white;
+    border:none;
+    padding:8px 15px;
+    cursor:pointer;
+    border-radius:6px;
+}
+
+.top-bar button:hover{
+    background:#444;
+}
+
+#searchInput{
+    flex:1;
+    padding:8px;
+    border-radius:6px;
+    border:none;
+}
+
+#m3uFile{
+    color:white;
+}
+
 body{
     margin:0;
     font-family:'Segoe UI',sans-serif;
