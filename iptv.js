@@ -123,5 +123,34 @@ function selectChannel(channel) {
         videoEl.play();
     }
 }
+function parseM3U(content) {
 
+  channels = [];
+
+  const lines = content.split("\n");
+
+  for (let i = 0; i < lines.length; i++) {
+
+    if (lines[i].startsWith("#EXTINF")) {
+
+      const info = lines[i];
+
+      const url = lines[i + 1]?.trim();
+
+      const name = info.split(",").pop();
+
+      const logoMatch = info.match(/tvg-logo="([^"]+)"/);
+
+      const logo = logoMatch ? logoMatch[1] : "";
+
+      channels.push({
+        name,
+        url,
+        logo
+      });
+    }
+  }
+
+  displayChannels();
+}
 renderBouquets();
