@@ -27,7 +27,8 @@ const bouquets = [
         {
             name: "France 24 Français",
             tag: "News",
-            logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/France_24_logo.svg/512px-France_24_logo.svg.png",
+            logo: "logos/AL Jazeera.png",
+            /*logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/France_24_logo.svg/512px-France_24_logo.svg.png",*/
             url: "https://static.france24.com/live/F24_FR_LO_HLS/live_web.m3u8"
         }
     ]
