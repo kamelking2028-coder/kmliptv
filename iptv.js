@@ -15,7 +15,7 @@ const bouquets = [
         {
             name: "Al Jazeera Arabic",
             tag: "News",
-            favicon: "logos/AL Jazeera.png",
+            logo: "logos/AL Jazeera.png",
             /*logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/20/Aljazeera_logo.png",*/
             url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
         }
@@ -74,7 +74,7 @@ function renderChannels(channels) {
 
         li.innerHTML = `
             <div class="channel-item">
-                <img class="channel-logo" src="${channel.logoUrl}
+                <img class="channel-logo" src="${channel.logo}
                 <div class="channel-info">
                     <div class="channel-name">${channel.name}</div>
                     <div class="channel-tag">${channel.tag}</div>
