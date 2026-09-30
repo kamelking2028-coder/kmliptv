@@ -7,10 +7,15 @@ const bouquetListEl = document.getElementById("bouquet-list");
 const channelListEl = document.getElementById("channel-list");
 const currentChannelEl = document.getElementById("current-channel");
 const videoEl = document.getElementById("video");
+const m3uFile = document.getElementById("m3uFile");
 
 let hlsInstance = null;
+let importedChannels = [];
 
-/* BOUQUETS */
+/* ---------------------------------------------------------
+   BOUQUETS
+--------------------------------------------------------- */
+
 const bouquets = [
 {
     name: "Arabes",
@@ -36,7 +41,10 @@ const bouquets = [
 }
 ];
 
-/* LECTURE VIDEO */
+/* ---------------------------------------------------------
+   LECTEUR
+--------------------------------------------------------- */
+
 function selectChannel(channel) {
 
     currentChannelEl.textContent = channel.name;
@@ -57,11 +65,13 @@ function selectChannel(channel) {
     } else {
 
         videoEl.src = channel.url;
-
     }
 }
 
-/* AFFICHAGE DES CHAINES */
+/* ---------------------------------------------------------
+   AFFICHAGE CHAINES
+--------------------------------------------------------- */
+
 function renderChannels(channels) {
 
     channelListEl.innerHTML = "";
@@ -70,21 +80,32 @@ function renderChannels(channels) {
 
         const li = document.createElement("li");
 
-        li.innerHTML = `
-            <div class="channel-item">
-                ${channel.logo}
+        const div = document.createElement("div");
+        div.className = "channel-item";
 
-                <div class="channel-info">
-                    <div class="channel-name">
-                        ${channel.name}
-                    </div>
+        const img = document.createElement("img");
+        img.className = "channel-logo";
+        img.src = channel.logo;
+        img.alt = channel.name;
 
-                    <div class="channel-tag">
-                        ${channel.tag || ""}
-                    </div>
-                </div>
-            </div>
-        `;
+        const info = document.createElement("div");
+        info.className = "channel-info";
+
+        const name = document.createElement("div");
+        name.className = "channel-name";
+        name.textContent = channel.name;
+
+        const tag = document.createElement("div");
+        tag.className = "channel-tag";
+        tag.textContent = channel.tag || "";
+
+        info.appendChild(name);
+        info.appendChild(tag);
+
+        div.appendChild(img);
+        div.appendChild(info);
+
+        li.appendChild(div);
 
         li.addEventListener("click", () => {
 
@@ -102,7 +123,10 @@ function renderChannels(channels) {
     });
 }
 
-/* AFFICHAGE DES BOUQUETS */
+/* ---------------------------------------------------------
+   AFFICHAGE BOUQUETS
+--------------------------------------------------------- */
+
 function renderBouquets() {
 
     bouquetListEl.innerHTML = "";
@@ -123,6 +147,9 @@ function renderBouquets() {
 
             renderChannels(bouquet.channels);
 
+            if (bouquet.channels.length > 0) {
+                selectChannel(bouquet.channels[0]);
+            }
         });
 
         bouquetListEl.appendChild(li);
@@ -139,11 +166,14 @@ function renderBouquets() {
         }
     });
 }
-let channels = [];
+
+/* ---------------------------------------------------------
+   IMPORT M3U
+--------------------------------------------------------- */
 
 function parseM3U(content) {
 
-    channels = [];
+    importedChannels = [];
 
     const lines = content.split("\n");
 
@@ -152,26 +182,59 @@ function parseM3U(content) {
         if (lines[i].startsWith("#EXTINF")) {
 
             const info = lines[i];
+
             const url = lines[i + 1]?.trim();
 
             const name = info.split(",").pop();
 
             const logoMatch = info.match(/tvg-logo="([^"]+)"/);
 
-            const logo = logoMatch ? logoMatch[1] : "";
+            const logo = logoMatch
+                ? logoMatch[1]
+                : "logos/default.png";
 
-            channels.push({
+            importedChannels.push({
                 name,
-                tag: "IPTV",
+                tag: "M3U",
                 logo,
                 url
             });
         }
     }
 
-    renderChannels(channels);
+    renderChannels(importedChannels);
+
+    if (importedChannels.length > 0) {
+        selectChannel(importedChannels[0]);
+    }
 }
-reader.onload = (e) => {
-    parseM3U(e.target.result);
-};
+
+/* ---------------------------------------------------------
+   FICHIER M3U
+--------------------------------------------------------- */
+
+if (m3uFile) {
+
+    m3uFile.addEventListener("change", event => {
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = e => {
+
+            parseM3U(e.target.result);
+
+        };
+
+        reader.readAsText(file);
+    });
+}
+
+/* ---------------------------------------------------------
+   DEMARRAGE
+--------------------------------------------------------- */
+
 renderBouquets();
