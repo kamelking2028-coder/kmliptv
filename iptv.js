@@ -64,73 +64,54 @@ function renderBouquets() {
         }
     });
 }
-function renderChannels(channels) {
+function afficherChaines(code, data) {
 
-    channelListEl.innerHTML = "";
+    const channelsDiv = document.getElementById("channels");
+    channelsDiv.innerHTML = "";
 
-    channels.forEach(channel => {
+    data[code].forEach(ch => {
 
-        const li = document.createElement("li");
+        const div = document.createElement("div");
+        div.className = "channel";
 
-        li.innerHTML = `
-            <div class="channel-item">
-                ${channel.logo}
+        const img = document.createElement("img");
+        img.className = "channel-logo";
+        img.src = ch.logo;
+        img.alt = ch.name;
 
-                <div class="channel-info">
-                    <div class="channel-name">
-                        ${channel.name}
-                    </div>
+        const titre = document.createElement("span");
+        titre.textContent = ch.name;
 
-                    <div class="channel-tag">
-                        ${channel.tag || ""}
-                    </div>
-                </div>
-            </div>
-        `;
+        div.appendChild(img);
+        div.appendChild(titre);
 
-        li.addEventListener("click", () => {
-
-            document
-                .querySelectorAll("#channel-list li")
-                .forEach(item => item.classList.remove("active"));
-
-            li.classList.add("active");
-
-            selectChannel(channel);
-
+        div.addEventListener("click", () => {
+            selectChannel(ch);
         });
 
-        channelListEl.appendChild(li);
-
+        channelsDiv.appendChild(div);
     });
 }
 
 
-function selectChannel(channel) {
 
-    currentChannelEl.textContent = channel.name;
-
-    if (hlsInstance) {
-        hlsInstance.destroy();
-    }
+function selectChannel(ch) {
 
     if (Hls.isSupported()) {
 
-        hlsInstance = new Hls();
+        const hls = new Hls();
 
-        hlsInstance.loadSource(channel.url);
-        hlsInstance.attachMedia(videoEl);
+        hls.loadSource(ch.url);
 
-        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-            videoEl.play();
-        });
+        hls.attachMedia(video);
 
     } else {
 
-        videoEl.src = channel.url;
-        videoEl.play();
+        video.src = ch.url;
+
     }
 }
+
 function parseM3U(content) {
 
   channels = [];
