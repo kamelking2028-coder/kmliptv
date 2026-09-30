@@ -151,6 +151,6 @@ function parseM3U(content) {
     }
   }
 
-  displayChannels();
+ /* displayChannels();*/
 }
 renderBouquets();
