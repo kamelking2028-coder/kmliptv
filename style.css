@@ -133,50 +133,12 @@ iframe, video{
     height:80px;
     object-fit:contain;
 }
-#video{
-    width:100%;
-    height:70vh;
-    border:none;
-    background:#000;
-}
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:#0f172a;
-    color:white;
-    overflow-y:auto;
-}
 .channel-item {
 display: flex;
 align-items: center;
 gap: 12px;
 padding: 8px;
 width: 100%;
-}
-
-.channel-logo{
-    width:40px;
-    height:40px;
-    object-fit:contain;
-    flex-shrink:0;
-    background:white;
-    border-radius:6px;
-    padding:2px;
-}
-.channel-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.channel-logo {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    flex-shrink: 0;
-    padding: 4px;
-    border-radius: 8px;
-    background: white;
 }
 
 .channel-info {
@@ -193,6 +155,35 @@ font-size: 16px;
 color: #9db1d4;
 font-size: 13px;
 }
+.channels-panel{
+    width:300px;
+    flex-shrink:0;
+    padding:15px;
+    overflow-y:auto;
+}
+.channel-logo{
+    position: fixed;
+    right: 250px;
+    width:48px;
+    height:48px;
+    object-fit:contain;
+    border-radius:6px;
+}
+
+#video{
+    width:100%;
+    height:70vh;
+    border:none;
+    background:#000;
+}
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:#0f172a;
+    color:white;
+    overflow-y:auto;
+}
+
 .app{
     display:flex;
     height:100vh;
@@ -203,13 +194,6 @@ font-size: 13px;
     flex-shrink:0;
 }
 
-.channels-panel{
-    width:300px;
-    flex-shrink:0;
-    padding:15px;
-    overflow-y:auto;
-}
-
 .player-panel{
     flex:1;
     padding:15px;
@@ -217,14 +201,6 @@ font-size: 13px;
 #channel-list li.active{
     background:#1e3a5f;
     border-left:4px solid #00d4ff;
-}
-.channel-logo{
-    position: fixed;
-    right: 250px;
-    width:48px;
-    height:48px;
-    object-fit:contain;
-    border-radius:6px;
 }
 
 @media (max-width: 768px) {
