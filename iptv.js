@@ -8,9 +8,61 @@ const channelListEl = document.getElementById("channel-list");
 const currentChannelEl = document.getElementById("current-channel");
 const videoEl = document.getElementById("video");
 const m3uFile = document.getElementById("m3uFile");
+const btnBouquets = document.getElementById("btnBouquets");
+const btnCanaux = document.getElementById("btnCanaux");
+const searchInput = document.getElementById("searchInput");
+/* Bouton bouquet*/ 
+btnBouquets.addEventListener("click", () => {
 
+    if (bouquetListEl.style.display === "none") {
+        bouquetListEl.style.display = "block";
+    } else {
+        bouquetListEl.style.display = "none";
+    }
+
+});
+
+
+/*-- Bouton Canaux--*/
 let hlsInstance = null;
 let importedChannels = [];
+
+btnBouquets.addEventListener("click", () => {
+
+    if (bouquetListEl.style.display === "none") {
+        bouquetListEl.style.display = "block";
+    } else {
+        bouquetListEl.style.display = "none";
+    }
+
+});
+
+/* Bouton Recherche */ 
+searchInput.addEventListener("input", () => {
+
+    const texte = searchInput.value.toLowerCase();
+
+    let resultat = [];
+
+    bouquets.forEach(bouquet => {
+
+        bouquet.channels.forEach(channel => {
+
+            if (
+                channel.name.toLowerCase().includes(texte) ||
+                (channel.tag || "").toLowerCase().includes(texte)
+            ) {
+                resultat.push(channel);
+            }
+
+        });
+
+    });
+
+    renderChannels(resultat);
+
+});
+
 
 /* ---------------------------------------------------------
    BOUQUETS
