@@ -1,107 +1,103 @@
-/* ---------------------------------------------------------
+/* ==========================
    KML IPTV
-   Bouquets + Chaînes + Lecteur HLS
---------------------------------------------------------- */
+========================== */
 
 const bouquetListEl = document.getElementById("bouquet-list");
 const channelListEl = document.getElementById("channel-list");
 const currentChannelEl = document.getElementById("current-channel");
 const videoEl = document.getElementById("video");
+
 const m3uFile = document.getElementById("m3uFile");
+
 const btnBouquets = document.getElementById("btnBouquets");
 const btnCanaux = document.getElementById("btnCanaux");
 const searchInput = document.getElementById("searchInput");
-/* Bouton bouquet*/ 
-btnBouquets.addEventListener("click", () => {
 
-    if (bouquetListEl.style.display === "none") {
-        bouquetListEl.style.display = "block";
-    } else {
-        bouquetListEl.style.display = "none";
-    }
-
-});
+let hlsInstance = null;
 let importedChannels = [];
 let bouquetsM3U = {};
 
-/* ----------------------------------
-   PARSEUR M3U COMPLET
----------------------------------- */
+/* ==========================
+   PLAYER
+========================== */
 
-function parseM3U(content) {
+function selectChannel(channel) {
 
-    importedChannels = [];
-    bouquetsM3U = {};
+    currentChannelEl.textContent = channel.name;
 
-    const lines = content.split("\n");
-
-    for (let i = 0; i < lines.length; i++) {
-
-        const line = lines[i].trim();
-
-        if (!line.startsWith("#EXTINF")) continue;
-
-        const url = lines[i + 1]?.trim();
-
-        if (!url || !url.startsWith("http")) continue;
-
-        const name =
-            line.split(",").pop()?.trim() || "Chaîne inconnue";
-
-        const logoMatch =
-            line.match(/tvg-logo="([^"]+)"/);
-
-        const groupMatch =
-            line.match(/group-title="([^"]+)"/);
-
-        const idMatch =
-            line.match(/tvg-id="([^"]+)"/);
-
-        const logo =
-            logoMatch?.[1] || "logos/default.png";
-
-        const group =
-            groupMatch?.[1] || "Divers";
-
-        const tvgId =
-            idMatch?.[1] || "";
-
-        let country = "Autres";
-
-        if (tvgId.includes(".")) {
-
-            const parts = tvgId.split(".");
-
-            country = parts[parts.length - 1]
-                .toUpperCase();
-        }
-
-        const channel = {
-            name,
-            logo,
-            url,
-            group,
-            country,
-            tvgId,
-            tag: group
-        };
-
-        importedChannels.push(channel);
-
-        /* Création automatique des bouquets */
-
-        if (!bouquetsM3U[country]) {
-            bouquetsM3U[country] = [];
-        }
-
-        bouquetsM3U[country].push(channel);
+    if (hlsInstance) {
+        hlsInstance.destroy();
     }
 
-    console.log("Chaînes :", importedChannels);
-    console.log("Bouquets :", bouquetsM3U);
+    if (Hls.isSupported()) {
 
-    buildBouquetsFromM3U();
+        hlsInstance = new Hls();
+
+        hlsInstance.loadSource(channel.url);
+
+        hlsInstance.attachMedia(videoEl);
+
+    } else {
+
+        videoEl.src = channel.url;
+    }
 }
+
+/* ==========================
+   AFFICHAGE CHAINES
+========================== */
+
+function renderChannels(channels) {
+
+    channelListEl.innerHTML = "";
+
+    channels.forEach(channel => {
+
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+            <div class="channel-item">
+
+                ${channel.logo}
+
+                <div class="channel-info">
+
+                    <div class="channel-name">
+                        ${channel.name}
+                    </div>
+
+                    <div class="channel-tag">
+                        ${channel.tag}
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+        li.addEventListener("click", () => {
+
+            document
+                .querySelectorAll("#channel-list li")
+                .forEach(item =>
+                    item.classList.remove("active")
+                );
+
+            li.classList.add("active");
+
+            selectChannel(channel);
+
+        });
+
+        channelListEl.appendChild(li);
+
+    });
+}
+
+/* ==========================
+   BOUQUETS
+========================== */
+
 function buildBouquetsFromM3U() {
 
     bouquetListEl.innerHTML = "";
@@ -124,6 +120,7 @@ function buildBouquetsFromM3U() {
             });
 
             bouquetListEl.appendChild(li);
+
         });
 
     const firstCountry =
@@ -140,270 +137,158 @@ function buildBouquetsFromM3U() {
         );
     }
 }
-/*-- Bouton Canaux--*/
-let hlsInstance = null;
-let importedChannels = [];
 
-btnBouquets.addEventListener("click", () => {
-
-    if (bouquetListEl.style.display === "none") {
-        bouquetListEl.style.display = "block";
-    } else {
-        bouquetListEl.style.display = "none";
-    }
-
-});
-
-/* Bouton Recherche */ 
-searchInput.addEventListener("input", () => {
-
-    const texte = searchInput.value.toLowerCase();
-
-    let resultat = [];
-
-    bouquets.forEach(bouquet => {
-
-        bouquet.channels.forEach(channel => {
-
-            if (
-                channel.name.toLowerCase().includes(texte) ||
-                (channel.tag || "").toLowerCase().includes(texte)
-            ) {
-                resultat.push(channel);
-            }
-
-        });
-
-    });
-
-    renderChannels(resultat);
-
-});
-
-
-/* ---------------------------------------------------------
-   BOUQUETS
---------------------------------------------------------- */
-/*
-const bouquets = [
-{
-    name: "Arabes",
-    channels: [
-        {
-            name: "Al Jazeera Arabic",
-            tag: "News",
-            logo: "logos/AL Jazeera.png",
-            url: "https://live-hls-web-aja.getaj.net/AJA/index.m3u8"
-        }
-    ]
-},
-{
-    name: "Français",
-    channels: [
-        {
-            name: "France 24 Français",
-            tag: "News",
-            logo: "logos/france24.png",
-            url: "https://static.france24.com/live/F24_FR_LO_HLS/live_web.m3u8"
-        }
-    ]
-}
-];
-/*
-/* ---------------------------------------------------------
-   LECTEUR
---------------------------------------------------------- */
-
-function selectChannel(channel) {
-
-    currentChannelEl.textContent = channel.name;
-
-    if (hlsInstance) {
-        hlsInstance.destroy();
-        hlsInstance = null;
-    }
-
-    if (Hls.isSupported()) {
-
-        hlsInstance = new Hls();
-
-        hlsInstance.loadSource(channel.url);
-
-        hlsInstance.attachMedia(videoEl);
-
-    } else {
-
-        videoEl.src = channel.url;
-    }
-}
-
-/* ---------------------------------------------------------
-   AFFICHAGE CHAINES
---------------------------------------------------------- */
-
-function renderChannels(channels) {
-
-    channelListEl.innerHTML = "";
-
-    channels.forEach(channel => {
-
-        const li = document.createElement("li");
-
-        const div = document.createElement("div");
-        div.className = "channel-item";
-
-        const img = document.createElement("img");
-        img.className = "channel-logo";
-        img.src = channel.logo;
-        img.alt = channel.name;
-
-        const info = document.createElement("div");
-        info.className = "channel-info";
-
-        const name = document.createElement("div");
-        name.className = "channel-name";
-        name.textContent = channel.name;
-
-        const tag = document.createElement("div");
-        tag.className = "channel-tag";
-        tag.textContent = channel.tag || "";
-
-        info.appendChild(name);
-        info.appendChild(tag);
-
-        div.appendChild(img);
-        div.appendChild(info);
-
-        li.appendChild(div);
-
-        li.addEventListener("click", () => {
-
-            document
-                .querySelectorAll("#channel-list li")
-                .forEach(item => item.classList.remove("active"));
-
-            li.classList.add("active");
-
-            selectChannel(channel);
-
-        });
-
-        channelListEl.appendChild(li);
-    });
-}
-
-/* ---------------------------------------------------------
-   AFFICHAGE BOUQUETS
---------------------------------------------------------- */
-
-function renderBouquets() {
-
-    bouquetListEl.innerHTML = "";
-
-    bouquets.forEach((bouquet, index) => {
-
-        const li = document.createElement("li");
-
-        li.textContent = bouquet.name;
-
-        li.addEventListener("click", () => {
-
-            document
-                .querySelectorAll("#bouquet-list li")
-                .forEach(item => item.classList.remove("active"));
-
-            li.classList.add("active");
-
-            renderChannels(bouquet.channels);
-
-            if (bouquet.channels.length > 0) {
-                selectChannel(bouquet.channels[0]);
-            }
-        });
-
-        bouquetListEl.appendChild(li);
-
-        if (index === 0) {
-
-            li.classList.add("active");
-
-            renderChannels(bouquet.channels);
-
-            if (bouquet.channels.length > 0) {
-                selectChannel(bouquet.channels[0]);
-            }
-        }
-    });
-}
-
-/* ---------------------------------------------------------
-   IMPORT M3U
---------------------------------------------------------- */
+/* ==========================
+   PARSEUR M3U
+========================== */
 
 function parseM3U(content) {
 
     importedChannels = [];
 
+    bouquetsM3U = {};
+
     const lines = content.split("\n");
 
     for (let i = 0; i < lines.length; i++) {
 
-        if (lines[i].startsWith("#EXTINF")) {
+        const line = lines[i].trim();
 
-            const info = lines[i];
+        if (!line.startsWith("#EXTINF"))
+            continue;
 
-            const url = lines[i + 1]?.trim();
+        const url =
+            lines[i + 1]?.trim();
 
-            const name = info.split(",").pop();
+        if (!url)
+            continue;
 
-            const logoMatch = info.match(/tvg-logo="([^"]+)"/);
+        const name =
+            line.split(",").pop()?.trim();
 
-            const logo = logoMatch
-                ? logoMatch[1]
-                : "logos/default.png";
+        const logoMatch =
+            line.match(/tvg-logo="([^"]+)"/);
 
-            importedChannels.push({
-                name,
-                tag: "M3U",
-                logo,
-                url
-            });
+        const idMatch =
+            line.match(/tvg-id="([^"]+)"/);
+
+        const groupMatch =
+            line.match(/group-title="([^"]+)"/);
+
+        const logo =
+            logoMatch?.[1] ||
+            "logos/default.png";
+
+        const group =
+            groupMatch?.[1] ||
+            "Divers";
+
+        const tvgId =
+            idMatch?.[1] ||
+            "";
+
+        let country = "AUTRES";
+
+        if (tvgId.includes(".")) {
+
+            country =
+                tvgId
+                    .split(".")
+                    .pop()
+                    .toUpperCase();
         }
-    }
 
-    renderChannels(importedChannels);
+        const channel = {
 
-    if (importedChannels.length > 0) {
-        selectChannel(importedChannels[0]);
-    }
-}
-
-/* ---------------------------------------------------------
-   FICHIER M3U
---------------------------------------------------------- */
-
-if (m3uFile) {
-
-    m3uFile.addEventListener("change", event => {
-
-        const file = event.target.files[0];
-
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = e => {
-
-            parseM3U(e.target.result);
+            name,
+            logo,
+            url,
+            tag: group,
+            country
 
         };
 
-        reader.readAsText(file);
-    });
+        importedChannels.push(channel);
+
+        if (!bouquetsM3U[country]) {
+
+            bouquetsM3U[country] = [];
+
+        }
+
+        bouquetsM3U[country].push(channel);
+    }
+
+    buildBouquetsFromM3U();
 }
 
-/* ---------------------------------------------------------
-   DEMARRAGE
---------------------------------------------------------- */
+/* ==========================
+   IMPORT M3U
+========================== */
 
-renderBouquets();
+m3uFile.addEventListener("change", e => {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = evt => {
+
+        parseM3U(evt.target.result);
+
+    };
+
+    reader.readAsText(file);
+
+});
+
+/* ==========================
+   BOUTON BOUQUETS
+========================== */
+
+btnBouquets.addEventListener("click", () => {
+
+    bouquetListEl.classList.toggle("hidden");
+
+});
+
+/* ==========================
+   BOUTON CANAUX
+========================== */
+
+btnCanaux.addEventListener("click", () => {
+
+    renderChannels(importedChannels);
+
+});
+
+/* ==========================
+   RECHERCHE
+========================== */
+
+searchInput.addEventListener("input", () => {
+
+    const txt =
+        searchInput.value
+        .toLowerCase();
+
+    const result =
+        importedChannels.filter(ch =>
+
+            ch.name
+            .toLowerCase()
+            .includes(txt)
+
+            ||
+
+            ch.tag
+            .toLowerCase()
+            .includes(txt)
+
+        );
+
+    renderChannels(result);
+
+});
