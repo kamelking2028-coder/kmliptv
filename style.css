@@ -146,10 +146,12 @@ body{
     color:white;
     overflow-y:auto;
 }
-.channel-item{
-    display:flex;
-    align-items:center;
-    gap:10px;
+.channel-item {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 8px;
+width: 100%;
 }
 
 .channel-logo{
@@ -178,17 +180,18 @@ body{
 }
 
 .channel-info {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+display: flex;
+flex-direction: column;
+overflow: hidden;
 }
-
 .channel-name {
-    font-weight: 600;
+color: white;
+font-weight: 600;
+font-size: 16px;
 }
-
 .channel-tag {
-    color: #aab4c5;
+color: #9db1d4;
+font-size: 13px;
 }
 .app{
     display:flex;
