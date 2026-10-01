@@ -46,7 +46,6 @@ function selectChannel(channel) {
 /* ==========================
    AFFICHAGE CHAINES
 ========================== */
-
 function renderChannels(channels) {
 
     channelListEl.innerHTML = "";
@@ -55,33 +54,38 @@ function renderChannels(channels) {
 
         const li = document.createElement("li");
 
-        li.innerHTML = `
-            <div class="channel-item">
+        const div = document.createElement("div");
+        div.className = "channel-item";
 
-                ${channel.logo}
+        const img = document.createElement("img");
+        img.className = "channel-logo";
+        img.src = channel.logo;
+        img.alt = channel.name;
 
-                <div class="channel-info">
+        const info = document.createElement("div");
+        info.className = "channel-info";
 
-                    <div class="channel-name">
-                        ${channel.name}
-                    </div>
+        const name = document.createElement("div");
+        name.className = "channel-name";
+        name.textContent = channel.name;
 
-                    <div class="channel-tag">
-                        ${channel.tag}
-                    </div>
+        const tag = document.createElement("div");
+        tag.className = "channel-tag";
+        tag.textContent = channel.tag || "";
 
-                </div>
+        info.appendChild(name);
+        info.appendChild(tag);
 
-            </div>
-        `;
+        div.appendChild(img);
+        div.appendChild(info);
+
+        li.appendChild(div);
 
         li.addEventListener("click", () => {
 
             document
                 .querySelectorAll("#channel-list li")
-                .forEach(item =>
-                    item.classList.remove("active")
-                );
+                .forEach(item => item.classList.remove("active"));
 
             li.classList.add("active");
 
@@ -90,9 +94,10 @@ function renderChannels(channels) {
         });
 
         channelListEl.appendChild(li);
-
     });
 }
+
+
 
 /* ==========================
    BOUQUETS
