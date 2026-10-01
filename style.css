@@ -258,5 +258,29 @@ body{
         padding:10px;
     }
 }
+@media (max-width:768px){
 
+    .sidebar{
+        width:100%;
+        height:auto;
+        overflow-x:auto;
+        overflow-y:hidden;
+        white-space:nowrap;
+        padding:10px;
+    }
+
+    .sidebar ul{
+        display:flex;
+        flex-wrap:nowrap;
+        gap:8px;
+    }
+
+    .sidebar li{
+        min-width:80px;
+        margin:0;
+        text-align:center;
+        flex-shrink:0;
+    }
+
+}
 
