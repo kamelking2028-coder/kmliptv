@@ -21,8 +21,125 @@ btnBouquets.addEventListener("click", () => {
     }
 
 });
+let importedChannels = [];
+let bouquetsM3U = {};
 
+/* ----------------------------------
+   PARSEUR M3U COMPLET
+---------------------------------- */
 
+function parseM3U(content) {
+
+    importedChannels = [];
+    bouquetsM3U = {};
+
+    const lines = content.split("\n");
+
+    for (let i = 0; i < lines.length; i++) {
+
+        const line = lines[i].trim();
+
+        if (!line.startsWith("#EXTINF")) continue;
+
+        const url = lines[i + 1]?.trim();
+
+        if (!url || !url.startsWith("http")) continue;
+
+        const name =
+            line.split(",").pop()?.trim() || "Chaîne inconnue";
+
+        const logoMatch =
+            line.match(/tvg-logo="([^"]+)"/);
+
+        const groupMatch =
+            line.match(/group-title="([^"]+)"/);
+
+        const idMatch =
+            line.match(/tvg-id="([^"]+)"/);
+
+        const logo =
+            logoMatch?.[1] || "logos/default.png";
+
+        const group =
+            groupMatch?.[1] || "Divers";
+
+        const tvgId =
+            idMatch?.[1] || "";
+
+        let country = "Autres";
+
+        if (tvgId.includes(".")) {
+
+            const parts = tvgId.split(".");
+
+            country = parts[parts.length - 1]
+                .toUpperCase();
+        }
+
+        const channel = {
+            name,
+            logo,
+            url,
+            group,
+            country,
+            tvgId,
+            tag: group
+        };
+
+        importedChannels.push(channel);
+
+        /* Création automatique des bouquets */
+
+        if (!bouquetsM3U[country]) {
+            bouquetsM3U[country] = [];
+        }
+
+        bouquetsM3U[country].push(channel);
+    }
+
+    console.log("Chaînes :", importedChannels);
+    console.log("Bouquets :", bouquetsM3U);
+
+    buildBouquetsFromM3U();
+}
+function buildBouquetsFromM3U() {
+
+    bouquetListEl.innerHTML = "";
+
+    Object.keys(bouquetsM3U)
+        .sort()
+        .forEach(country => {
+
+            const li = document.createElement("li");
+
+            li.textContent =
+                `${country} (${bouquetsM3U[country].length})`;
+
+            li.addEventListener("click", () => {
+
+                renderChannels(
+                    bouquetsM3U[country]
+                );
+
+            });
+
+            bouquetListEl.appendChild(li);
+        });
+
+    const firstCountry =
+        Object.keys(bouquetsM3U)[0];
+
+    if (firstCountry) {
+
+        renderChannels(
+            bouquetsM3U[firstCountry]
+        );
+
+        selectChannel(
+            bouquetsM3U[firstCountry][0]
+        );
+    }
+}
 /*-- Bouton Canaux--*/
 let hlsInstance = null;
 let importedChannels = [];
