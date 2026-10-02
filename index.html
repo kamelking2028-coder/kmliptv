@@ -8,15 +8,31 @@
 </head>
 <body>
     <!---Menu superieur principal-->
+
 <div class="top-bar">
 
     <button id="btnBouquets">📺 Bouquets</button>
 
     <button id="btnCanaux">📡 Canaux</button>
-    <button id="btnSettings">
-     <button id="btnSettings">
-    ⚙️ Menu
-</button>
+
+    <button onclick="location.href='iptv.html'">
+        ⚙️ Menu
+    </button>
+
+    <input
+        id="searchInput"
+        type="text"
+        placeholder="🔍 Recherche..."
+    >
+
+    <input
+        id="m3uFile"
+        type="file"
+        accept=".m3u"
+    >
+
+</div>
+
 
 <div id="iptvPanel" class="hidden">
 
