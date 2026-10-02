@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Configuration compte</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Segoe UI,sans-serif;
+    background:#0f172a;
+    color:white;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    max-width:800px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.card{
+    background:#1e293b;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.card h2{
+    margin-bottom:15px;
+    color:#00d4ff;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:8px;
+}
+
+button{
+    background:#0ea5e9;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0284c7;
+}
+
+.back-btn{
+    background:#334155;
+    margin-bottom:20px;
+}
+
+.back-btn:hover{
+    background:#475569;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <button
+        class="back-btn"
+        onclick="location.href='index.html'">
+        ← Retour IPTV
+    </button>
+
+    <h1>Configuration Compte </h1>
+
+    <!-- M3U Fichier -->
+
+    <div class="card">
+
+        <h2>📁 Importer un fichier M3U</h2>
+
+        <input
+            id="m3uFile"
+            type="file"
+            accept=".m3u"
+        >
+
+    </div>
+
+    <!-- URL M3U -->
+
+    <div class="card">
+
+        <h2>🌐 URL M3U</h2>
+
+        <input
+            id="m3uUrl"
+            type="text"
+            placeholder="https://monserveur.com/playlist.m3u"
+        >
+
+        <button id="loadM3uBtn">
+            Charger la playlist
+        </button>
+
+    </div>
+
+    <!-- Xtream -->
+
+    <div class="card">
+
+        <h2>⚙️ Connexion IPTV</h2>
+
+        <input
+            id="server"
+            type="text"
+            placeholder="Serveur"
+        >
+
+        <input
+            id="username"
+            type="text"
+            placeholder="Utilisateur"
+        >
+
+        <input
+            id="password"
+            type="password"
+            placeholder="Mot de passe"
+        >
+
+        <button id="connectBtn">
+            Connexion
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+document
+.getElementById("loadM3uBtn")
+.addEventListener("click", () => {
+
+    const url =
+        document.getElementById("m3uUrl").value;
+
+    if(!url){
+        alert("Entrez une URL M3U");
+        return;
+    }
+
+    localStorage.setItem(
+        "iptv_m3u_url",
+        url
+    );
+
+    alert("URL enregistrée");
+});
+
+document
+.getElementById("connectBtn")
+.addEventListener("click", () => {
+
+    const server =
+        document.getElementById("server").value;
+
+    const username =
+        document.getElementById("username").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    localStorage.setItem(
+        "iptv_server",
+        server
+    );
+
+    localStorage.setItem(
+        "iptv_username",
+        username
+    );
+
+    localStorage.setItem(
+        "iptv_password",
+        password
+    );
+
+    alert("Informations enregistrées");
+});
+
+</script>
+
+</body>
+</html>
