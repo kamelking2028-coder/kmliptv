@@ -13,16 +13,6 @@ const btnBouquets = document.getElementById("btnBouquets");
 const btnCanaux = document.getElementById("btnCanaux");
 const searchInput = document.getElementById("searchInput");
 const btnSettings =
-    document.getElementById("btnSettings");
-
-const iptvPanel =
-    document.getElementById("iptvPanel");
-
-btnSettings.addEventListener("click", () => {
-
-    iptvPanel.classList.toggle("hidden");
-
-});
 
 let hlsInstance = null;
 let importedChannels = [];
