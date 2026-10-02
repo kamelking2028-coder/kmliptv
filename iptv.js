@@ -12,7 +12,6 @@ const m3uFile = document.getElementById("m3uFile");
 const btnBouquets = document.getElementById("btnBouquets");
 const btnCanaux = document.getElementById("btnCanaux");
 const searchInput = document.getElementById("searchInput");
-const btnSettings =
 
 let hlsInstance = null;
 let importedChannels = [];
@@ -24,10 +23,13 @@ let bouquetsM3U = {};
 
 function selectChannel(channel) {
 
+    if (!channel) return;
+
     currentChannelEl.textContent = channel.name;
 
     if (hlsInstance) {
         hlsInstance.destroy();
+        hlsInstance = null;
     }
 
     if (Hls.isSupported()) {
@@ -47,6 +49,7 @@ function selectChannel(channel) {
 /* ==========================
    AFFICHAGE CHAINES
 ========================== */
+
 function renderChannels(channels) {
 
     channelListEl.innerHTML = "";
@@ -60,8 +63,12 @@ function renderChannels(channels) {
 
         const img = document.createElement("img");
         img.className = "channel-logo";
-        img.src = channel.logo;
+        img.src = channel.logo || "logos/default.png";
         img.alt = channel.name;
+
+        img.onerror = () => {
+            img.src = "logos/default.png";
+        };
 
         const info = document.createElement("div");
         info.className = "channel-info";
@@ -86,7 +93,9 @@ function renderChannels(channels) {
 
             document
                 .querySelectorAll("#channel-list li")
-                .forEach(item => item.classList.remove("active"));
+                .forEach(item =>
+                    item.classList.remove("active")
+                );
 
             li.classList.add("active");
 
@@ -95,13 +104,12 @@ function renderChannels(channels) {
         });
 
         channelListEl.appendChild(li);
+
     });
 }
 
-
-
 /* ==========================
-   BOUQUETS
+   CREATION DES BOUQUETS
 ========================== */
 
 function buildBouquetsFromM3U() {
@@ -151,7 +159,6 @@ function buildBouquetsFromM3U() {
 function parseM3U(content) {
 
     importedChannels = [];
-
     bouquetsM3U = {};
 
     const lines = content.split("\n");
@@ -163,23 +170,23 @@ function parseM3U(content) {
         if (!line.startsWith("#EXTINF"))
             continue;
 
-        const url =
-            lines[i + 1]?.trim();
+        const url = lines[i + 1]?.trim();
 
-        if (!url)
+        if (!url || !url.startsWith("http"))
             continue;
 
         const name =
-            line.split(",").pop()?.trim();
+            line.split(",").pop()?.trim()
+            || "Chaîne inconnue";
 
         const logoMatch =
             line.match(/tvg-logo="([^"]+)"/);
 
-        const idMatch =
-            line.match(/tvg-id="([^"]+)"/);
-
         const groupMatch =
             line.match(/group-title="([^"]+)"/);
+
+        const idMatch =
+            line.match(/tvg-id="([^"]+)"/);
 
         const logo =
             logoMatch?.[1] ||
@@ -199,9 +206,9 @@ function parseM3U(content) {
 
             country =
                 tvgId
-                    .split(".")
-                    .pop()
-                    .toUpperCase();
+                .split(".")
+                .pop()
+                .toUpperCase();
         }
 
         const channel = {
@@ -232,69 +239,83 @@ function parseM3U(content) {
    IMPORT M3U
 ========================== */
 
-m3uFile.addEventListener("change", e => {
+if (m3uFile) {
 
-    const file = e.target.files[0];
+    m3uFile.addEventListener("change", e => {
 
-    if (!file) return;
+        const file = e.target.files[0];
 
-    const reader = new FileReader();
+        if (!file) return;
 
-    reader.onload = evt => {
+        const reader = new FileReader();
 
-        parseM3U(evt.target.result);
+        reader.onload = evt => {
 
-    };
+            parseM3U(evt.target.result);
 
-    reader.readAsText(file);
+        };
 
-});
+        reader.readAsText(file);
+
+    });
+}
 
 /* ==========================
    BOUTON BOUQUETS
 ========================== */
 
-btnBouquets.addEventListener("click", () => {
+if (btnBouquets) {
 
-    bouquetListEl.classList.toggle("hidden");
+    btnBouquets.addEventListener("click", () => {
 
-});
+        bouquetListEl.classList.toggle("hidden");
+
+    });
+
+}
 
 /* ==========================
    BOUTON CANAUX
 ========================== */
 
-btnCanaux.addEventListener("click", () => {
+if (btnCanaux) {
 
-    renderChannels(importedChannels);
+    btnCanaux.addEventListener("click", () => {
 
-});
+        renderChannels(importedChannels);
+
+    });
+
+}
 
 /* ==========================
    RECHERCHE
 ========================== */
 
-searchInput.addEventListener("input", () => {
+if (searchInput) {
 
-    const txt =
-        searchInput.value
-        .toLowerCase();
+    searchInput.addEventListener("input", () => {
 
-    const result =
-        importedChannels.filter(ch =>
+        const txt =
+            searchInput.value.toLowerCase();
 
-            ch.name
-            .toLowerCase()
-            .includes(txt)
+        const result =
+            importedChannels.filter(ch =>
 
-            ||
+                ch.name
+                    .toLowerCase()
+                    .includes(txt)
 
-            ch.tag
-            .toLowerCase()
-            .includes(txt)
+                ||
 
-        );
+                ch.tag
+                    .toLowerCase()
+                    .includes(txt)
 
-    renderChannels(result);
+            );
 
-});
+        renderChannels(result);
+
+    });
+
+}
