@@ -212,6 +212,53 @@ document
 });
 
 </script>
+    // Fonc
+<h2>Exporter une liste en fichier texte</h2>
+    <button id="saveBtn">Sauvegarder la liste</button>
 
+    <script>
+        // Exemple de liste
+        const maListe = ["Pomme", "Banane", "Cerise", "Mangue"];
+
+        // Fonction pour sauvegarder la liste dans un fichier
+        function sauvegarderListe(liste, nomFichier) {
+            try {
+                if (!Array.isArray(liste)) {
+                    throw new Error("Le paramètre fourni n'est pas une liste.");
+                }
+
+                // Convertir la liste en texte (une ligne par élément)
+                const contenu = liste.join("\n");
+
+                // Créer un objet Blob contenant le texte
+                const blob = new Blob([contenu], { type: "text/plain;charset=utf-8" });
+
+                // Créer un lien de téléchargement temporaire
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = nomFichier;
+
+                // Déclencher le téléchargement
+                document.body.appendChild(a);
+                a.click();
+
+                // Nettoyer
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                console.log(`Fichier "${nomFichier}" sauvegardé avec succès.`);
+            } catch (err) {
+                console.error("Erreur lors de la sauvegarde :", err.message);
+            }
+        }
+
+        // Événement sur le bouton
+        document.getElementById("saveBtn").addEventListener("click", () => {
+            sauvegarderListe(maListe, "ma_liste.txt");
+        });
+    </script>
+
+    
 </body>
 </html>
