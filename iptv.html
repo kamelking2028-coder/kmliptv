@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Configuration compte</title>
-
+<p style="margin-bottom:20px;color:#cbd5e1;">
+Choisissez une méthode de connexion :
+fichier M3U, URL M3U ou serveur IPTV.
+</p>
 <style>
 
 *{
@@ -86,9 +89,13 @@ button:hover{
         onclick="location.href='index.html'">
         ← Retour IPTV
     </button>
-
-    <h1>Configuration Compte </h1>
-
+    
+   <button id="saveBtn">
+           💾 Sauvegarder
+   </button>
+    
+    <h1>⚙️ Configuration IPTV</h1>
+    
     <!-- M3U Fichier -->
 
     <div class="card">
@@ -100,9 +107,9 @@ button:hover{
             type="file"
             accept=".m3u"
         >
-
+     
     </div>
-
+    
     <!-- URL M3U -->
 
     <div class="card">
