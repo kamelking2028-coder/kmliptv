@@ -190,7 +190,7 @@ function parseM3U(content) {
         const idMatch =
             line.match(/tvg-id="([^"]+)"/);
        const logo =
-             logoMatch?.[1] || "🌌";
+             logoMatch?.[1] || "";
 
 
         const group =
