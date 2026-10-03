@@ -62,15 +62,15 @@ function renderChannels(channels) {
         const div = document.createElement("div");
         div.className = "channel-item";
 
-        const img = document.createElement("img");
-        img.className = "channel-logo";
-       /* img.src = channel.logo || "logos/default.png";*/
-        img.alt = channel.name;
+             const img = document.createElement("img");
+             img.className = "channel-logo";
 
-        img.onerror = () => {
-            img.onerror = () => {
-            img.src = "logos/default.png";
-        };
+             img.src = channel.logo || "";
+             img.alt = channel.name;
+
+             img.onerror = () => {
+             img.style.display = "none";
+};
 
         const info = document.createElement("div");
         info.className = "channel-info";
@@ -292,6 +292,9 @@ if (btnCanaux) {
 /* ==========================
    RECHERCHE
 ========================== */
+/* ==========================
+   RECHERCHE
+========================== */
 
 if (searchInput) {
 
@@ -303,21 +306,34 @@ if (searchInput) {
         const result =
             importedChannels.filter(ch =>
 
-                ch.name
-                    .toLowerCase()
-                    .includes(txt)
+                ch.name.toLowerCase().includes(txt)
 
                 ||
 
-                ch.tag
-                    .toLowerCase()
-                    .includes(txt)
+                ch.tag.toLowerCase().includes(txt)
 
             );
 
         renderChannels(result);
 
     });
+
+}
+
+/* ==========================
+   RESTAURATION PLAYLIST
+========================== */
+
+const savedPlaylist =
+    localStorage.getItem("playlistContent");
+
+if (savedPlaylist) {
+
+    parseM3U(savedPlaylist);
+
+}
+
+      
    
    /* Fonction de sauvegarde */
  const savedPlaylist =
