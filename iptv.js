@@ -318,5 +318,16 @@ if (searchInput) {
         renderChannels(result);
 
     });
+   
+   /* Fonction de sauvegarde */
+ const savedPlaylist =
+    localStorage.getItem(
+        "playlistContent"
+    );
 
+if (savedPlaylist) {
+
+    parseM3U(savedPlaylist);
+
+}   
 }
