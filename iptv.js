@@ -21,16 +21,12 @@ let bouquetsM3U = {};
 /* ==========================
    PLAYER
 ========================== */
-
 function selectChannel(channel) {
-
-    if (!channel) return;
 
     currentChannelEl.textContent = channel.name;
 
     if (hlsInstance) {
         hlsInstance.destroy();
-        hlsInstance = null;
     }
 
     if (Hls.isSupported()) {
@@ -50,8 +46,7 @@ function selectChannel(channel) {
 /* ==========================
    AFFICHAGE CHAINES
 ========================== */
-
-function renderChannels(channel) {
+function renderChannels(channels) {
 
     channelListEl.innerHTML = "";
 
@@ -64,14 +59,8 @@ function renderChannels(channel) {
 
         const img = document.createElement("img");
         img.className = "channel-logo";
-
-        img.src = channel.logo || "";
+        img.src = channel.logo;
         img.alt = channel.name;
-        img.onerror = () => {
-            img.style.display = "none";
-        };   
-    })
-
 
         const info = document.createElement("div");
         info.className = "channel-info";
@@ -96,9 +85,7 @@ function renderChannels(channel) {
 
             document
                 .querySelectorAll("#channel-list li")
-                .forEach(item =>
-                    item.classList.remove("active")
-                );
+                .forEach(item => item.classList.remove("active"));
 
             li.classList.add("active");
 
@@ -107,9 +94,12 @@ function renderChannels(channel) {
         });
 
         channelListEl.appendChild(li);
-     
-
+    });
 }
+
+
+
+
 /* ==========================
    CREATION DES BOUQUETS
 ========================== */
