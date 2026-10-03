@@ -51,7 +51,7 @@ function selectChannel(channel) {
    AFFICHAGE CHAINES
 ========================== */
 
-function renderChannels(channels) {
+function renderChannels(channel) {
 
     channelListEl.innerHTML = "";
 
