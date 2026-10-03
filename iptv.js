@@ -293,22 +293,53 @@ if (btnCanaux) {
 /* ==========================
    RECHERCHE canaux
 ========================== */
-
 if (searchInput) {
+
 
     searchInput.addEventListener("input", () => {
 
-        ...
+
+        const txt =
+            searchInput.value.toLowerCase();
+
+
+        const result =
+            importedChannels.filter(ch =>
+
+
+                ch.name
+                    .toLowerCase()
+                    .includes(txt)
+
+
+                ||
+
+
+                ch.tag
+                    .toLowerCase()
+                    .includes(txt)
+
+
+            );
+
+
+        renderChannels(result);
+
 
     });
+   
+   /* Fonction de sauvegarde */
+ const savedPlaylist =
+    localStorage.getItem(
+        "playlistContent"
+    );
 
-    const savedPlaylist =
-        localStorage.getItem("playlistContent");
 
-    if (savedPlaylist) {
+if (savedPlaylist) {
 
-        parseM3U(savedPlaylist);
 
-    }
+    parseM3U(savedPlaylist);
 
+
+}   
 }
