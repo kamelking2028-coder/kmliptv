@@ -107,7 +107,7 @@ function renderChannels(channels) {
         });
 
         channelListEl.appendChild(li);
-    
+     
 
 }
 /* ==========================
