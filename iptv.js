@@ -336,7 +336,7 @@ if (savedPlaylist) {
       
    
    /* Fonction de sauvegarde */
- const savedPlaylist =
+const savedPlaylist =
     localStorage.getItem(
         "playlistContent"
     );
@@ -346,4 +346,4 @@ if (savedPlaylist) {
     parseM3U(savedPlaylist);
 
 }   
-}
+
