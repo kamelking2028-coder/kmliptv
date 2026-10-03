@@ -72,7 +72,7 @@ function renderChannels(channels) {
             img.style.display = "none";
             };   
     })
-};
+
 
         const info = document.createElement("div");
         info.className = "channel-info";
@@ -109,7 +109,7 @@ function renderChannels(channels) {
 
         channelListEl.appendChild(li);
 
-    
+};
 
 /* ==========================
    CREATION DES BOUQUETS
