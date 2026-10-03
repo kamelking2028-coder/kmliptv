@@ -16,16 +16,7 @@ const searchInput = document.getElementById("searchInput");
 let hlsInstance = null;
 let importedChannels = [];
 let bouquetsM3U = {};
-const playlistContent =
-    localStorage.getItem(
-        "playlistContent"
-    );
 
-if (playlistContent) {
-
-    parseM3U(playlistContent);
-
-}
 
 /* ==========================
    PLAYER
