@@ -68,8 +68,12 @@ function renderChannels(channels) {
              img.src = channel.logo || "";
              img.alt = channel.name;
 
-             img.onerror = () => {
-             img.style.display = "none";
+            img.src = channel.logo || "";
+            img.alt = channel.name;
+
+            img.onerror = () => {
+            img.style.display = "none";
+            };   
 };
 
         const info = document.createElement("div");
@@ -292,9 +296,6 @@ if (btnCanaux) {
 /* ==========================
    RECHERCHE
 ========================== */
-/* ==========================
-   RECHERCHE
-========================== */
 
 if (searchInput) {
 
@@ -332,8 +333,6 @@ if (savedPlaylist) {
     parseM3U(savedPlaylist);
 
 }
-
-      
    
    /* Fonction de sauvegarde */
 const savedPlaylist =
