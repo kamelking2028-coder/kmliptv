@@ -64,10 +64,11 @@ function renderChannels(channels) {
 
         const img = document.createElement("img");
         img.className = "channel-logo";
-        img.src = channel.logo || "logos/default.png";
+       /* img.src = channel.logo || "logos/default.png";*/
         img.alt = channel.name;
 
         img.onerror = () => {
+            img.onerror = () => {
             img.src = "logos/default.png";
         };
 
@@ -188,10 +189,9 @@ function parseM3U(content) {
 
         const idMatch =
             line.match(/tvg-id="([^"]+)"/);
+       const logo =
+             logoMatch?.[1] || "🌌";
 
-        const logo =
-            logoMatch?.[1] ||
-            "logos/default.png";
 
         const group =
             groupMatch?.[1] ||
