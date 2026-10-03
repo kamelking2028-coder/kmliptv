@@ -186,6 +186,38 @@ document
 });
 document
 .getElementById("loadM3uBtn")
+.addEventListener("click", async () => {
+
+    const url =
+        document.getElementById("m3uUrl").value.trim();
+
+    try {
+
+        const response =
+            await fetch(url);
+
+        const content =
+            await response.text();
+
+        localStorage.setItem(
+            "playlistContent",
+            content
+        );
+
+        alert("Playlist chargée");
+
+    } catch(err){
+
+        console.error(err);
+
+        alert("Erreur de chargement");
+
+    }
+
+});
+    
+document
+.getElementById("loadM3uBtn")
 .addEventListener("click", () => {
 
     const url =
@@ -206,16 +238,44 @@ document
 
 document
 .getElementById("connectBtn")
-.addEventListener("click", () => {
+.addEventListener("click", async () => {
 
     const server =
-        document.getElementById("server").value;
+        document.getElementById("server").value.trim();
 
     const username =
-        document.getElementById("username").value;
+        document.getElementById("username").value.trim();
 
     const password =
-        document.getElementById("password").value;
+        document.getElementById("password").value.trim();
+
+    const playlistUrl =
+        `${server}/get.php?username=${username}&password=${password}&type=m3u_plus&output=m3u8`;
+
+    try {
+
+        const response =
+            await fetch(playlistUrl);
+
+        const content =
+            await response.text();
+
+        localStorage.setItem(
+            "playlistContent",
+            content
+        );
+
+        alert("Playlist chargée");
+
+    } catch(err){
+
+        console.error(err);
+
+        alert("Erreur IPTV");
+
+    }
+
+});
 
     localStorage.setItem(
         "iptv_server",
