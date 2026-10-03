@@ -291,7 +291,7 @@ if (btnCanaux) {
 }
 
 /* ==========================
-   RECHERCHE
+   RECHERCHE canaux
 ========================== */
 
 if (searchInput) {
