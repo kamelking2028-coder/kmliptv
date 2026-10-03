@@ -67,10 +67,10 @@ function renderChannels(channels) {
 
          img.src = channel.logo || "";
          img.alt = channel.name;
-             img.onerror = () => {
-             img.style.display = "none";
-             };   
-        })
+            img.onerror = () => {
+                 img.style.display = "none";
+            };   
+    })
 
 
         const info = document.createElement("div");
@@ -107,9 +107,9 @@ function renderChannels(channels) {
         });
 
         channelListEl.appendChild(li);
-    };
+    
 
-
+}
 /* ==========================
    CREATION DES BOUQUETS
 ========================== */
