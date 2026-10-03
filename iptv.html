@@ -159,7 +159,31 @@ button:hover{
 </div>
 
 <script>
+    
+document
+.getElementById("m3uFile")
+.addEventListener("change", e => {
 
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = evt => {
+
+        localStorage.setItem(
+            "playlistContent",
+            evt.target.result
+        );
+
+        alert("Playlist enregistrée");
+
+    };
+
+    reader.readAsText(file);
+
+});
 document
 .getElementById("loadM3uBtn")
 .addEventListener("click", () => {
